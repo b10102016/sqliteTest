@@ -113,6 +113,22 @@ public class databaseDAO {
         return result.toString();
 
     }
+    public String getAll_f2() {
+        StringBuilder result = new StringBuilder();
+        Cursor cursor = db.query(
+                TABLE_NAME, null, null, null, null, null, null, null);
+
+        while (cursor.moveToNext()) {
+            Log.d(TAG,"Getting Record : "+cursor.getString(1));
+            result.append(getRecord(cursor)).append(';');
+        }
+
+
+        cursor.close();
+        Log.d(TAG,"Finish");
+        return result.toString();
+
+    }
 
     // 取得指定編號的資料物件
     public String get(long id) {

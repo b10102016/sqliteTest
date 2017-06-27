@@ -7,18 +7,23 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.user.sqlitetest.dbDAO.databaseDAO;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -64,10 +69,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ListView lvQueryResult = (ListView) findViewById(R.id.lvQueryResult);
+        ArrayList<String> dataSet = new ArrayList<>();
+        String[] result_row = dbDAO.getAll_f2().split(";");
+        etQueryResult.setText(result_row[0]+result_row[0]+"");
+        Collections.addAll(dataSet, result_row);
+        final tableAdapter mAdapter = new tableAdapter(dataSet,this);
+        lvQueryResult.setAdapter(mAdapter);
         btnQueryAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                etQueryResult.setText(dbDAO.getAll());
+                //etQueryResult.setText(dbDAO.getAll());
+                mAdapter.getData().clear();
+                String[] result_row = dbDAO.getAll_f2().split(";");
+                mAdapter.addAll(result_row);
+                mAdapter.notifyDataSetChanged();
                 imm.hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
